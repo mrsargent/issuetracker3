@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import EditIssueButton from './EditIssueButton';
 import IssueDetails from './IssueDetails';
 import DeleteIssueButton from './DeleteIssueButton';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/auth/authOptions';
 
 interface Props {
     params: {id: string}  //the reaons why it's a string is because by default when you enter a number in a url (route) it is a string not a number. We'll need to parse to get a nubmer
@@ -12,6 +14,8 @@ interface Props {
 //for understanding purpoes... becaues this is a page.tsx file inside of a folder [id] it automatically takes a string as a parameter
 //in our case this is a nubmer that represents the issue number.
 const IssueDetailPage = async ({params}: Props) => {
+
+    const session = await getServerSession(authOptions);
     // if (typeof params.id !== 'number') notFound();  doesn't seem to work very well for some reason
 
     const issue =  await prisma.issue.findUnique({
@@ -28,12 +32,12 @@ const IssueDetailPage = async ({params}: Props) => {
         <Box className='md:col-span-4'>
            <IssueDetails issue={issue}/>
         </Box>
-        <Box>
+        {session && <Box>
             <Flex direction="column" gap="4">
                 <EditIssueButton issueId={issue.id}/>
                 <DeleteIssueButton issueId={issue.id}/>
             </Flex>
-        </Box>
+        </Box>}
     </Grid>
   )
 }
