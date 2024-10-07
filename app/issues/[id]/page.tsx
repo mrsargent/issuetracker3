@@ -6,6 +6,7 @@ import IssueDetails from './IssueDetails';
 import DeleteIssueButton from './DeleteIssueButton';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/auth/authOptions';
+import AssigneeSelect from './AssigneeSelect';
 
 interface Props {
     params: {id: string}  //the reaons why it's a string is because by default when you enter a number in a url (route) it is a string not a number. We'll need to parse to get a nubmer
@@ -33,6 +34,7 @@ const IssueDetailPage = async ({params}: Props) => {
            <IssueDetails issue={issue}/>
         </Box>
         {session && <Box>
+            <AssigneeSelect />
             <Flex direction="column" gap="4">
                 <EditIssueButton issueId={issue.id}/>
                 <DeleteIssueButton issueId={issue.id}/>
